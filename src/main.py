@@ -21,13 +21,21 @@ class TradingBot:
     """Main trading bot."""
 
     def __init__(self):
+        print("TradingBot.__init__ start")
         self.config = get_config()
+        print("Config loaded in bot")
         self.market_data = get_market_data()
+        print("Market data initialized")
         self.strategy = get_strategy()
+        print("Strategy initialized")
         self.order_manager = get_order_manager()
+        print("Order manager initialized")
         self.simulator = get_simulator()
+        print("Simulator initialized")
         self.logger = get_logger()
+        print("Logger initialized")
         self.running = True
+        print("TradingBot.__init__ complete")
 
     async def start(self):
         """Start the bot."""
