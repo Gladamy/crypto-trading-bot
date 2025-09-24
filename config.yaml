@@ -1,0 +1,67 @@
+# Trading Bot Configuration Example
+# Copy this to config.yaml and customize
+
+# Trading mode: demo (Kraken demo), paper_local (local sim), live (real trading)
+mode: demo
+# Dry run: log orders without sending (for live mode testing)
+dry_run: false
+
+# Exchange settings
+exchange:
+  name: kraken
+  # For live/demo modes, path to .env file with API_KEY and API_SECRET
+  credentials_env_file: .env
+  # Base asset and quote (Kraken format: BTC/USD, ETH/USD)
+  symbol: BTC/USD
+  # Supported timeframes
+  timeframes: [1m, 5m]
+
+# Strategy parameters
+strategy:
+  ema_short: 9
+  ema_long: 21
+  pullback_pct: 0.5
+  risk_pct_per_trade: 1.0
+  # Volatility guard: block if ATR > threshold
+  volatility_threshold: 2.0
+
+# Risk controls
+risk:
+  max_daily_loss_pct: 5.0
+  max_drawdown_pct: 10.0
+  max_positions: 1
+  # Soft guard: block after N consecutive losses
+  max_consecutive_losses: 3
+
+# Paper trading settings
+paper:
+  initial_balance: 1500.0
+  # For local sim: latency in ms, slippage in ticks
+  latency_ms: 100
+  slippage_ticks: 0
+
+# Fees (maker/taker in basis points)
+fees:
+  maker_bps: 16  # 0.16%
+  taker_bps: 26  # 0.26%
+
+# Determinism for tests/backtests
+seed: 42
+# Data window for backtests (ISO format)
+backtest_start: "2024-01-01T00:00:00Z"
+backtest_end: "2024-01-31T00:00:00Z"
+
+# API settings
+api:
+  host: 0.0.0.0
+  port: 8001
+  # Token for /pause /resume endpoints
+  control_token: your_secret_token
+
+# Logging
+logging:
+  level: INFO
+  # Path for trade blotter CSV
+  blotter_path: data/trade_blotter.csv
+  # Discord webhook for alerts
+  discord_webhook: "https://discord.com/api/webhooks/1414875821751009330/K9_tA6dkoFj4JhH59UZNJBowCgKyiJTWy0wVtYqpImya7ZQiwivMZhnjNTYs_suGZaEY"

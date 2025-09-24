@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+  trading-bot:
+    build: .
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./config.yaml:/app/config.yaml
+      - ./data:/app/data
+      - ./.env:/app/.env  # For API keys
+    environment:
+      - PYTHONPATH=/app
+    command: ["python", "-m", "src.main", "run"]
+    restart: unless-stopped
+
+  # Optional: separate service for backtesting
+  backtester:
+    build: .
+    volumes:
+      - ./config.yaml:/app/config.yaml
+      - ./data:/app/data
+    environment:
+      - PYTHONPATH=/app
+    command: ["python", "-m", "src.backtester"]
+    profiles:
+      - backtest

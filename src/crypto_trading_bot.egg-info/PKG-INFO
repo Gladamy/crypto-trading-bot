@@ -1,0 +1,158 @@
+Metadata-Version: 2.4
+Name: crypto-trading-bot
+Version: 0.1.0
+Summary: Production-ready intraday crypto trading bot for Kraken
+Author-email: Your Name <your.email@example.com>
+Requires-Python: >=3.10
+Description-Content-Type: text/markdown
+Requires-Dist: ccxt>=4.0.0
+Requires-Dist: pandas>=1.5.0
+Requires-Dist: pandas-ta>=0.3.14b
+Requires-Dist: vectorbt>=0.27.0
+Requires-Dist: fastapi>=0.100.0
+Requires-Dist: uvicorn[standard]>=0.20.0
+Requires-Dist: pyyaml>=6.0
+Requires-Dist: python-dotenv>=1.0.0
+Requires-Dist: numpy>=1.21.0
+Requires-Dist: aiohttp>=3.8.0
+Requires-Dist: websockets>=11.0.0
+Requires-Dist: structlog>=23.0.0
+Provides-Extra: dev
+Requires-Dist: pytest>=7.0.0; extra == "dev"
+Requires-Dist: black>=22.0.0; extra == "dev"
+Requires-Dist: mypy>=1.0.0; extra == "dev"
+
+# Crypto Trading Bot
+
+A production-ready intraday crypto trading bot for Kraken using EMA crossover + pullback strategy.
+
+## Features
+
+- **Exchange Support**: Kraken with demo/live/paper modes
+- **Strategy**: EMA crossover trend filter + pullback scalper (1-5m timeframe)
+- **Risk Controls**: Max risk per trade, daily drawdown limits, position caps
+- **Paper Trading**: Local simulation with historical replay or live websocket feeds
+- **Backtesting**: VectorBT for optimization + custom backtester for production parity
+- **Observability**: Structured JSON logs, trade blotter CSV, performance metrics
+- **Deployment**: Docker containerized with API endpoints
+
+## Quick Start
+
+### Prerequisites
+
+- Python 3.10+
+- Docker (optional)
+- Kraken API keys (for live/demo)
+
+### Installation
+
+1. Clone repo:
+   ```bash
+   git clone <repo-url>
+   cd crypto-trading-bot
+   ```
+
+2. Install dependencies:
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+3. Copy config:
+   ```bash
+   cp config.example.yaml config.yaml
+   ```
+
+### Configuration
+
+Edit `config.yaml`:
+
+- Set `mode`: `paper_local`, `demo`, or `live`
+- Adjust strategy params, risk limits
+- For live/demo: create `.env` with `API_KEY` and `API_SECRET`
+
+### Kraken API Keys
+
+1. Go to [Kraken API Settings](https://www.kraken.com/u/security/api)
+2. Create API key with trading permissions
+3. For demo: Use Kraken Futures demo (note: spot demo limited)
+4. Add to `.env`:
+   ```
+   API_KEY=your_key
+   API_SECRET=your_secret
+   ```
+
+## Running
+
+### Local Paper Trading
+
+```bash
+python -m src.main run --mode paper_local
+```
+
+### Backtesting
+
+```bash
+python -m src.backtester
+```
+
+Output: `backtest_report.csv`, `equity_curve.csv`
+
+### Docker
+
+```bash
+docker-compose up trading-bot
+```
+
+For backtesting:
+```bash
+docker-compose --profile backtest up backtester
+```
+
+## API Endpoints
+
+- `GET /status`: Current positions, P&L, equity, mode
+- `POST /pause`: Pause trading (requires token)
+- `POST /resume`: Resume trading (requires token)
+
+Example:
+```bash
+curl http://localhost:8000/status
+```
+
+## Testing
+
+Run unit tests:
+```bash
+pytest
+```
+
+## Architecture
+
+- `src/config.py`: Configuration validation
+- `src/exchange.py`: CCXT Kraken client
+- `src/data.py`: Market data feeds
+- `src/strategy.py`: Trading logic
+- `src/execution.py`: Order management
+- `src/simulator.py`: Paper trading simulation
+- `src/backtester.py`: Backtesting harness
+- `src/logging_metrics.py`: Observability
+
+## Sample Backtest Output
+
+```
+total_return: 0.15
+max_drawdown: 0.08
+sharpe_ratio: 1.2
+win_rate: 0.65
+total_trades: 45
+```
+
+## Security
+
+- API secrets not committed to repo
+- Use environment variables or OS key vault
+- Paper mode for safe testing
+
+## Disclaimer
+
+This is for educational purposes. Trading involves risk. Test thoroughly before live trading.
