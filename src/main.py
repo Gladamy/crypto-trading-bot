@@ -96,15 +96,26 @@ class TradingBot:
 
 async def main():
     """Main entry point."""
-    config_path = "config.yaml"
-    if len(sys.argv) > 2 and sys.argv[1] == "run":
-        config_path = sys.argv[2] if len(sys.argv) > 2 else "config.yaml"
+    try:
+        config_path = "config.yaml"
+        if len(sys.argv) > 2 and sys.argv[1] == "run":
+            config_path = sys.argv[2] if len(sys.argv) > 2 else "config.yaml"
 
-    config = load_config(config_path)
-    set_config(config)
+        print(f"Loading config from {config_path}")
+        config = load_config(config_path)
+        set_config(config)
+        print("Config loaded successfully")
 
-    bot = TradingBot()
-    await bot.start()
+        print("Initializing bot...")
+        bot = TradingBot()
+        print("Bot initialized, starting...")
+
+        await bot.start()
+    except Exception as e:
+        print(f"Critical error in main: {e}")
+        import traceback
+        traceback.print_exc()
+        raise
 
 
 if __name__ == "__main__":
