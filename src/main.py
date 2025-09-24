@@ -39,20 +39,34 @@ class TradingBot:
 
     async def start(self):
         """Start the bot."""
+        print("TradingBot.start() called")
         self.logger.log_event("bot_started", mode=self.config.mode)
+        print("Logged bot started")
 
         # Start data feeds
-        await self.market_data.start()
+        print("Starting market data...")
+        try:
+            await self.market_data.start()
+            print("Market data started")
+        except Exception as e:
+            print(f"Market data start failed: {e}")
+            raise
 
         # Start API server in background
+        print("Starting API server...")
         api_task = asyncio.create_task(self._run_api())
 
         # Main trading loop
         try:
+            print("Starting trading loop...")
             await self._trading_loop()
         except KeyboardInterrupt:
             self.logger.log_event("bot_stopped", reason="keyboard_interrupt")
+        except Exception as e:
+            print(f"Trading loop error: {e}")
+            raise
         finally:
+            print("Stopping market data...")
             await self.market_data.stop()
             api_task.cancel()
 
