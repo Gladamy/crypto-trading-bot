@@ -40,7 +40,8 @@ class TradingBot:
     async def start(self):
         """Start the bot."""
         print("TradingBot.start() called")
-        self.logger.log_event("bot_started", mode=self.config.mode)
+        # self.logger.log_event("bot_started", mode=self.config.mode)
+        print("Logger commented out")
         print("Logged bot started")
 
         # Start data feeds
